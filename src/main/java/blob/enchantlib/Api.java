@@ -57,13 +57,6 @@ public class Api {
 		return false;
 	}
 	
-	public Boolean conflictsWithItem(ItemStack i, org.bukkit.enchantments.Enchantment e) {
-		for (org.bukkit.enchantments.Enchantment c : i.getEnchantments().keySet()) {
-			if (e.conflictsWith(c)) return true;
-		}
-		return false;
-	}
-	
 	public ItemMeta ApplyCustomLore(ItemMeta meta, Map<org.bukkit.enchantments.Enchantment, Integer> enchs) {
 		ArrayList<String> lore = new ArrayList<String>();
 		for (Enchantment ce : CustomEnch) {
