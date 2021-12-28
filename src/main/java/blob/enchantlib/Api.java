@@ -52,6 +52,7 @@ public class Api {
 
 	}
 	
+	
 	public Boolean isCustomEnchant(Enchantment ench) {
 		if (CustomEnch.contains(ench)) return true;
 		return false;

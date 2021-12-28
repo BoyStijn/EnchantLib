@@ -48,40 +48,55 @@ returns the bukkit version of the enchantment
 ### Making a custom enchantment
 
 ```java
-import net.minecraft.world.item.enchantment.Enchantment; //this is the NSM version of Enchantment
+import org.bukkit.inventory.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 
-public class example extends Enchantment {
-    
-    public example(Rarity rarity, EnchantmentSlotType type, EnumItemSlot... aenumitemslot) {
-		super(rarity, type, aenumitemslot);
+public class TestEnchant extends CustomEnchantment {
+
+	protected TestEnchant(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
+		super(rarity, target, slots);
 	}
-	
+
 	@Override
-	public int a(int i) { //Min enchant cost per level (int i)
-	    return i * 30;
+	public int getMinCost(int level) { // the xp cost of the enchant
+		return 0;
 	}
-	
+
 	@Override
-	public int b(int i) { //Max enchant cost per level (int i)
-	    return a(i) + 30;
+	public int getMaxCost(int level) {
+		return 0;
 	}
-	
+
 	@Override
-	public boolean b() { //isTreasure (if true the enchantment wont be obtainable with an enchantment table)
+	public boolean isTreasure() { // if true the enchantment cant be obtained in an enchantment table
+		return false;
+	}
+
+	@Override
+	public int getMaxLevel() { // max level enchantment obtainable (Usually 1,3 or 5)
+		return 1;
+	}
+
+	@Override
+	public boolean isCompatible(Enchantment e) { // if this enchant can be applied to an item with the other enchant
+		return true;
+	}
+
+	@Override
+	public boolean canEnchant(ItemStack i) { // if this enchant can be applied to a certain item
+		return true;
+	}
+
+	@Override
+	public boolean isCursed() { // if the enchant is cursed
+		return false;
+	}
+
+	@Override
+	public boolean isFindable() { // if false the item wont so in loot generation, villagers and enchantment tables. it can still be in loot if specified, but wont be in random enchantment pool
 		return true;
 	}
 	
-	
-	@Override
-	public int a() { //Max level of the enchantment (usually 1, 3 or 5)
-		return 5;
-	}
-	
-	@Override
-	public boolean a(Enchantment enchantment) { //isCompatible (if false the enchantment wont apply)
-		return true;
-	}
-    
 }
 ```
 
