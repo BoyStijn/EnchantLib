@@ -24,26 +24,26 @@ if (Bukkit.getServer().getPluginManager().isPluginEnabled("EnchantLib")) {
 ### Api Functions
 
 #### `registerEnchants(NamespacedKey key, Enchantment ench, String name)`
-registers a custom enchantment
+registers a custom enchantment \
 returns void
 
 #### `isCustomEnchant(Enchantment ench)`
-checks if an enchantment is a custom enchantment
+checks if an enchantment is a custom enchantment \
 returns boolean
 
 #### `ApplyCustomLore(ItemMeta meta, Map<org.bukkit.enchantments.Enchantment, Integer> enchs)`
-updates the lore on an item. Updates are already handled by EnchantLib so this shouldn't be called
+updates the lore on an item. Updates are already handled by EnchantLib so this shouldn't be called \
 returns ItemMeta
 
 #### `damageItem(int i, ItemStack item)`
-damages an item by ammount i. This function will damage items just like vanilla minecraft would
+damages an item by ammount i. This function will damage items just like vanilla minecraft would \
 returns void
 
 #### `getEnchants()`
-returns a list of all custom enchants
+returns a list of all custom enchants 
 
 #### `getBukkitEnchant(Enchantment e)`
-returns the bukkit version of the enchantment
+returns the bukkit version of the enchantment 
 
 ### Making a custom enchantment
 
