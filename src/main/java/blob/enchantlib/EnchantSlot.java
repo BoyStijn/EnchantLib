@@ -5,10 +5,10 @@ import net.minecraft.world.entity.EnumItemSlot;
 public enum EnchantSlot {
 	MAIN_HAND(EnumItemSlot.a),
 	OFF_HAND(EnumItemSlot.b),
-	HEAD(EnumItemSlot.c),
-	CHEST(EnumItemSlot.d),
-	LEGS(EnumItemSlot.e),
-	FEET(EnumItemSlot.f);
+	HEAD(EnumItemSlot.f),
+	CHEST(EnumItemSlot.e),
+	LEGS(EnumItemSlot.d),
+	FEET(EnumItemSlot.c);
 
 	private final EnumItemSlot s;
 	

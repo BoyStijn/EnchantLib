@@ -4,10 +4,10 @@ import net.minecraft.world.item.enchantment.EnchantmentSlotType;
 
 public enum EnchantTarget {
 	ARMOR(EnchantmentSlotType.a),
-	ARMOR_HEAD(EnchantmentSlotType.b),
-	ARMOR_CHEST(EnchantmentSlotType.c),
-	ARMOR_LEGS(EnchantmentSlotType.d),
-	ARMOR_FEET(EnchantmentSlotType.e),
+	ARMOR_HEAD(EnchantmentSlotType.e),
+	ARMOR_CHEST(EnchantmentSlotType.d),
+	ARMOR_LEGS(EnchantmentSlotType.c),
+	ARMOR_FEET(EnchantmentSlotType.b),
 	SWORD(EnchantmentSlotType.f),
 	TOOLS(EnchantmentSlotType.g),
 	FISHING_ROD(EnchantmentSlotType.h),

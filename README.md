@@ -45,6 +45,17 @@ returns a list of all custom enchants
 #### `getBukkitEnchant(Enchantment e)`
 returns the bukkit version of the enchantment 
 
+#### `getNSMEntity(LivingEntity e)`
+returns the NMS version of an entity
+
+#### `overrideGoals(LivingEntity e, Map<PathfinderGoal, Integer> goals, Map<PathfinderGoal, Integer> targets)`
+override the pathfinding goals of an entity \
+returns void
+
+#### `addAttributes(LivingEntity e, AttributeBase b, double value)`
+Add / override attributes of mobs (like movement speed and attack damage) \
+returns void
+
 ### Making a custom enchantment
 
 ```java

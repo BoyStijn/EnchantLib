@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_18_R1.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,8 +21,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.minecraft.core.IRegistry;
+import net.minecraft.world.entity.EntityCreature;
+import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.ai.attributes.AttributeBase;
+import net.minecraft.world.entity.ai.attributes.AttributeMapBase;
+import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalSelector;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentDurability;
+import com.google.common.collect.Sets;
 
 public class Api {
 
@@ -120,5 +132,45 @@ public class Api {
 	
 	public org.bukkit.enchantments.Enchantment getBukkitEnchant(Enchantment e) {
 		return new CraftEnchantment(e);
+	}
+	
+	public EntityCreature getNSMEntity(LivingEntity e) {
+		return (EntityCreature) ((EntityInsentient)((CraftEntity)e).getHandle());
+	}
+	
+	public void overrideGoals(LivingEntity e, Map<PathfinderGoal, Integer> goals, Map<PathfinderGoal, Integer> targets) {
+		EntityCreature c = (EntityCreature) ((EntityInsentient)((CraftEntity)e).getHandle());
+		try {
+		     Field dField = PathfinderGoalSelector.class.getDeclaredField("d");
+		     dField.setAccessible(true);
+		     dField.set(c.bR, Sets.newLinkedHashSet());
+		     dField.set(c.bS, Sets.newLinkedHashSet());
+		 } catch (Exception exc) {exc.printStackTrace();}
+		 for (Entry<PathfinderGoal, Integer> eset : goals.entrySet()) {
+			 c.bR.a(eset.getValue(), eset.getKey());
+		 }
+		 for (Entry<PathfinderGoal, Integer> eset : targets.entrySet()) {
+			 c.bS.a(eset.getValue(), eset.getKey());
+		 }
+	}
+	
+	public void addAttributes(LivingEntity e, AttributeBase b, double value) {
+		EntityCreature c = (EntityCreature) ((EntityInsentient)((CraftEntity)e).getHandle());
+		try {
+			 Field bQField = EntityLiving.class.getDeclaredField("bQ");
+	    	 bQField.setAccessible(true);
+	    	 AttributeMapBase base = (AttributeMapBase) bQField.get(c);
+		     Field bField = AttributeMapBase.class.getDeclaredField("b");
+		     bField.setAccessible(true);
+	    	 @SuppressWarnings("unchecked")
+			 Map<AttributeBase, AttributeModifiable> bmap = (Map<AttributeBase, AttributeModifiable>) bField.get(base);
+	    	 if (bmap.containsKey(b)) {
+	    		 bmap.get(b).a(value);
+	    	 } else {
+		    	 AttributeModifiable m = new AttributeModifiable(b, mod -> {});
+		    	 m.a(value);
+			     bmap.put(b, m);
+	    	 }
+		 } catch (Exception exc) {exc.printStackTrace();}
 	}
 }
