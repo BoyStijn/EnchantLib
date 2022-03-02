@@ -1,6 +1,6 @@
 package blob.enchantlib;
 
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import net.minecraft.world.entity.EnumItemSlot;
@@ -65,7 +65,7 @@ public abstract class CustomEnchantment extends Enchantment {
 	public abstract int getMaxCost(int level);
 	public abstract boolean isTreasure();
 	public abstract boolean isCursed();
-	public abstract boolean isFindable();
+	public abstract boolean isFindable(); 
 	public abstract int getMaxLevel();
 	public abstract boolean isCompatible(Enchantment e);
 	public abstract boolean canEnchant(ItemStack i);

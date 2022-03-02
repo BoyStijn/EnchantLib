@@ -10,9 +10,9 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_18_R1.enchantments.CraftEnchantment;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R2.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -48,7 +48,7 @@ public class Api {
 	            e.printStackTrace();
 	        }
 	        try {
-	        	IRegistry.a(IRegistry.Y, key.toString(), ench);
+	        	IRegistry.a(IRegistry.V, key.toString(), ench);
 	        	org.bukkit.enchantments.Enchantment.registerEnchantment((org.bukkit.enchantments.Enchantment)new CraftEnchantment(ench)); 
 	            NameMap.put(ench, name);
 	            CustomEnch.add(ench);
@@ -76,6 +76,7 @@ public class Api {
 			org.bukkit.enchantments.Enchantment e = getBukkitEnchant(ce);
 			if (enchs.containsKey(e)) {
 				ChatColor c = ChatColor.GRAY;
+				if (ce.c()) c = ChatColor.RED;
 				if (ce.a() == 1) {
 					lore.add(c + NameMap.get(ce));
 				} else {
@@ -143,14 +144,14 @@ public class Api {
 		try {
 		     Field dField = PathfinderGoalSelector.class.getDeclaredField("d");
 		     dField.setAccessible(true);
+		     dField.set(c.bQ, Sets.newLinkedHashSet());
 		     dField.set(c.bR, Sets.newLinkedHashSet());
-		     dField.set(c.bS, Sets.newLinkedHashSet());
 		 } catch (Exception exc) {exc.printStackTrace();}
 		 for (Entry<PathfinderGoal, Integer> eset : goals.entrySet()) {
-			 c.bR.a(eset.getValue(), eset.getKey());
+			 c.bQ.a(eset.getValue(), eset.getKey());
 		 }
 		 for (Entry<PathfinderGoal, Integer> eset : targets.entrySet()) {
-			 c.bS.a(eset.getValue(), eset.getKey());
+			 c.bR.a(eset.getValue(), eset.getKey());
 		 }
 	}
 	
