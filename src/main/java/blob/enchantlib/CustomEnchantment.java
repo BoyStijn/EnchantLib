@@ -1,7 +1,9 @@
 package blob.enchantlib;
 
+
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+
 
 public abstract class CustomEnchantment {
 	

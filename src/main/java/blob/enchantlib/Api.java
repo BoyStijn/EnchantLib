@@ -77,6 +77,9 @@ public class Api {
 	            Field f = org.bukkit.enchantments.Enchantment.class.getDeclaredField("acceptingNew");
 	            f.setAccessible(true);
 	            f.set(null, true);
+	            Field bLField = RegistryMaterials.class.getDeclaredField("bL");
+	        	bLField.setAccessible(true);
+	        	bLField.set(IRegistry.V, false);
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
