@@ -1,73 +1,70 @@
 package blob.enchantlib;
 
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.world.entity.EnumItemSlot;
-import net.minecraft.world.item.enchantment.Enchantment;
-
-public abstract class CustomEnchantment extends Enchantment {
-
+public abstract class CustomEnchantment {
+	
+	private final EnchantRarity rarity;
+	private final EnchantTarget target;
+	private final EnchantSlot[] slots;
+	
 	protected CustomEnchantment(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
-		super(rarity.getValue(), target.getValue(), toNSM(slots));
-		// TODO Auto-generated constructor stub
-	}
-
-	private static EnumItemSlot[] toNSM(EnchantSlot[] a) {
-		EnumItemSlot[] e = {};
-		for (EnchantSlot s : a) {
-			e[e.length] = s.getValue();
-		}
-		return e;
+		this.rarity = rarity;
+		this.target = target;
+		this.slots = slots;
 	}
 	
-	@Override
-	public int a(int i) {
-	    return this.getMinCost(i);
+	public EnchantRarity getRarity() {
+		return this.rarity;
 	}
 	
-	@Override
-	public int b(int i) {
-	    return this.getMaxCost(i);
+	public EnchantTarget getTarget() {
+		return this.target;
 	}
 	
-	@Override
-	public boolean b() {
-		return this.isTreasure();
+	public EnchantSlot[] getSlots() {
+		return this.slots;
 	}
 	
-	@Override
-	public int a() {
-		return this.getMaxLevel();
+	public int MinLvl() {
+	    return 1;
 	}
 	
-	@Override
-	public boolean a(Enchantment e) {
-		return isCompatible(e);
+	public int MaxLvl() {
+	    return 1;
 	}
 	
-	@Override
-	public boolean a(net.minecraft.world.item.ItemStack i) {
-		return (super.a(i) && this.canEnchant(CraftItemStack.asBukkitCopy(i)));
+	public int MinCost(int lvl) {
+	    return 1 + lvl * 10;
+	}
+	  
+	public int MaxCost(int lvl) {
+	    return MinCost(lvl) + 5;
 	}
 	
-	@Override
-	public boolean c() {
-	    return this.isCursed();
+	public boolean canEnchant(ItemStack item) {
+	    return true;
 	}
 	
-	@Override
-	public boolean i() {
-		return this.isFindable();
+	public boolean isCompatible(Enchantment enchant) {
+		return true;
 	}
 	
-	public abstract int getMinCost(int level);
-	public abstract int getMaxCost(int level);
-	public abstract boolean isTreasure();
-	public abstract boolean isCursed();
-	public abstract boolean isFindable(); 
-	public abstract int getMaxLevel();
-	public abstract boolean isCompatible(Enchantment e);
-	public abstract boolean canEnchant(ItemStack i);
+	public boolean OnlyTreasure() {
+	    return false;
+	}
+	  
+	public boolean isCursed() {
+	    return false;
+	}
+	  
+	public boolean canTrade() {
+	    return true;
+	}
+	  
+	public boolean canFound() {
+	    return true;
+	}
 	
 }

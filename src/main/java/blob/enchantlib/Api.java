@@ -21,6 +21,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.minecraft.core.IRegistry;
+import net.minecraft.core.RegistryMaterials;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
@@ -37,8 +38,40 @@ public class Api {
 
 	private ArrayList<Enchantment> CustomEnch = new ArrayList<Enchantment>();
 	private HashMap<Enchantment, String> NameMap = new HashMap<Enchantment, String>();
+	private HashMap<CustomEnchantment, EnchantWrapper> WrapMap = new HashMap<CustomEnchantment, EnchantWrapper>();
 	
 	public void registerEnchants(NamespacedKey key, Enchantment ench, String name) {
+	    try{
+	        try {
+	            Field f = org.bukkit.enchantments.Enchantment.class.getDeclaredField("acceptingNew");
+	            f.setAccessible(true);
+	            f.set(null, true);
+	            Field bLField = RegistryMaterials.class.getDeclaredField("bL");
+	        	bLField.setAccessible(true);
+	        	bLField.set(IRegistry.V, false);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        try {	        	
+	        	IRegistry.a(IRegistry.V, key.toString(), ench);
+	        	org.bukkit.enchantments.Enchantment.registerEnchantment((org.bukkit.enchantments.Enchantment)new CraftEnchantment(ench)); 
+	            NameMap.put(ench, name);
+	            CustomEnch.add(ench);
+	            
+	            EnchantLib.Instance.getLogger().log(Level.INFO, "Registered enchantment " + ench.toString());
+	            EnchantLib.Instance.getLogger().log(Level.INFO, "Registered key " + key.toString());
+	        } catch (IllegalArgumentException e){
+	        	e.printStackTrace();
+	        }
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	}
+	
+	public void registerEnchants(NamespacedKey key, CustomEnchantment enchant, String name) {
+		Enchantment ench = new EnchantWrapper(enchant);
+		WrapMap.put(enchant, (EnchantWrapper) ench);
 	    try{
 	        try {
 	            Field f = org.bukkit.enchantments.Enchantment.class.getDeclaredField("acceptingNew");
@@ -133,6 +166,11 @@ public class Api {
 	
 	public org.bukkit.enchantments.Enchantment getBukkitEnchant(Enchantment e) {
 		return new CraftEnchantment(e);
+	}
+	
+	public org.bukkit.enchantments.Enchantment getBukkitEnchant(CustomEnchantment e) {
+		if (WrapMap.containsKey(e)) return new CraftEnchantment(WrapMap.get(e));
+		return null;
 	}
 	
 	public EntityCreature getNSMEntity(LivingEntity e) {

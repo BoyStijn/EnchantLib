@@ -27,6 +27,10 @@ if (Bukkit.getServer().getPluginManager().isPluginEnabled("EnchantLib")) {
 registers a custom enchantment \
 returns void
 
+#### `registerEnchants(NamespacedKey key, CustomEnchantment ench, String name)`
+registers a custom enchantment \
+returns void
+
 #### `isCustomEnchant(Enchantment ench)`
 checks if an enchantment is a custom enchantment \
 returns boolean
@@ -45,6 +49,9 @@ returns a list of all custom enchants
 #### `getBukkitEnchant(Enchantment e)`
 returns the bukkit version of the enchantment 
 
+#### `getBukkitEnchant(CustomEnchantment e)`
+returns the bukkit version of the enchantment 
+
 #### `getNSMEntity(LivingEntity e)`
 returns the NMS version of an entity
 
@@ -60,52 +67,65 @@ returns void
 
 ```java
 import org.bukkit.inventory.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
+import org.bukkit.enchantments.Enchantment;
+
+import blob.enchantlib.CustomEnchantment;
+import blob.enchantlib.EnchantRarity;
+import blob.enchantlib.EnchantSlot;
+import blob.enchantlib.EnchantTarget;
 
 public class TestEnchant extends CustomEnchantment {
 
-	protected TestEnchant(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
+	public TestEnchant(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
 		super(rarity, target, slots);
 	}
-
+	
 	@Override
-	public int getMinCost(int level) { // the xp cost of the enchant
-		return 0;
+	public int MinLvl() {
+	    return 1;
 	}
-
+	
 	@Override
-	public int getMaxCost(int level) {
-		return 0;
+	public int MaxLvl() {
+	    return 1;
 	}
-
+	
 	@Override
-	public boolean isTreasure() { // if true the enchantment cant be obtained in an enchantment table
-		return false;
+	public int MinCost(int lvl) {
+	    return 1 + lvl * 10;
 	}
-
+	
 	@Override
-	public int getMaxLevel() { // max level enchantment obtainable (Usually 1,3 or 5)
-		return 1;
+	public int MaxCost(int lvl) {
+	    return MinCost(lvl) + 5;
 	}
-
+	
 	@Override
-	public boolean isCompatible(Enchantment e) { // if this enchant can be applied to an item with the other enchant
+	public boolean canEnchant(ItemStack item) {
+	    return true;
+	}
+	
+	@Override
+	public boolean isCompatible(Enchantment enchant) {
 		return true;
 	}
-
+	
 	@Override
-	public boolean canEnchant(ItemStack i) { // if this enchant can be applied to a certain item
-		return true;
+	public boolean OnlyTreasure() {
+	    return false;
 	}
-
+	  
 	@Override
-	public boolean isCursed() { // if the enchant is cursed
-		return false;
+	public boolean isCursed() {
+	    return false;
 	}
-
-	@Override
-	public boolean isFindable() { // if false the item wont so in loot generation, villagers and enchantment tables. it can still be in loot if specified, but wont be in random enchantment pool
-		return true;
+	  
+	public boolean canTrade() {
+	    return true;
+	}
+	  
+	public boolean canFound() {
+	    return true;
 	}
 	
 }
