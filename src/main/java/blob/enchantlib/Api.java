@@ -107,12 +107,14 @@ public class Api {
 	}
 	
 	public ItemMeta ApplyCustomLore(ItemMeta meta, Map<org.bukkit.enchantments.Enchantment, Integer> enchs) {
+		if (meta == null) return null;
 		ArrayList<String> lore = new ArrayList<String>();
 		for (Enchantment ce : CustomEnch) {
 			org.bukkit.enchantments.Enchantment e = getBukkitEnchant(ce);
 			if (enchs.containsKey(e)) {
-				ChatColor c = ChatColor.GRAY;
+				ChatColor c = null;
 				if (ce.c()) c = ChatColor.RED;
+				if (!ce.c()) c = ChatColor.GRAY;
 				if (ce.a() == 1) {
 					lore.add(c + NameMap.get(ce));
 				} else {
