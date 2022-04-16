@@ -12,15 +12,29 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import blob.enchantlib.enchanttable.EnchantMenu;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.world.INamableTileEntity;
+import net.minecraft.world.TileInventory;
+import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.inventory.Container;
+import net.minecraft.world.inventory.ContainerAccess;
 import net.minecraft.world.inventory.InventoryCraftResult;
+import net.minecraft.world.level.World;
+import net.minecraft.world.level.block.entity.TileEntity;
 
-import java.util.logging.Level;
-
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftInventoryEnchanting;
+import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftInventoryView;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftResultInventory;
 
@@ -55,6 +69,22 @@ public class MainListener implements Listener {
 	@EventHandler
 	public void onInv(InventoryOpenEvent event) {
 		Inventory inv = event.getInventory();
+		
+		if (inv instanceof CraftInventoryEnchanting) {
+			InventoryView iv = event.getView();
+			Container cv = ((CraftInventoryView)iv).getHandle();
+			if (!(cv instanceof EnchantMenu)) {
+				event.setCancelled(true);
+				EntityHuman p = ((CraftPlayer)event.getPlayer()).getHandle();
+				World w = ((CraftWorld)event.getPlayer().getWorld()).getHandle();
+				Location loc = inv.getLocation();
+				BlockPosition pos = new BlockPosition(loc.getX(), loc.getY(), loc.getZ());
+				TileEntity data = w.c_(pos);
+				IChatBaseComponent var4 = ((INamableTileEntity)data).C_();
+				p.a(new TileInventory((numb, inv2, ent) -> new EnchantMenu(numb, inv2, ContainerAccess.a(w, pos)), var4));
+			}
+		}
+		
 		doLoreCalc(inv);
 	}
 	
@@ -70,8 +100,6 @@ public class MainListener implements Listener {
 	}
 	
 	public ItemStack doLoreCalc(Inventory inv) {
-		EnchantLib.Instance.getLogger().log(Level.INFO, inv.getClass().toString());
-		EnchantLib.Instance.getLogger().log(Level.INFO, inv.toString());
 		if (!(inv instanceof CraftResultInventory)) return null;
 		InventoryCraftResult result = (InventoryCraftResult) ((CraftResultInventory) inv).getResultInventory();
 		ItemStack i = CraftItemStack.asBukkitCopy(result.a(0));

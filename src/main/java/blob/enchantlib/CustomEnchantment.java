@@ -7,14 +7,19 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class CustomEnchantment {
 	
-	private final EnchantRarity rarity;
+	protected EnchantRarity rarity = EnchantRarity.COMMON;
 	private final EnchantTarget target;
 	private final EnchantSlot[] slots;
+	private final double Weighting;
 	
-	protected CustomEnchantment(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
-		this.rarity = rarity;
+	protected CustomEnchantment(double weight, EnchantTarget target, EnchantSlot[] slots) {
+		this.Weighting = weight;
 		this.target = target;
 		this.slots = slots;
+	}
+	
+	public double getWeighting() {
+		return this.Weighting;
 	}
 	
 	public EnchantRarity getRarity() {

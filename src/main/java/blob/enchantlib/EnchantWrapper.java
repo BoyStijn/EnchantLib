@@ -27,6 +27,10 @@ public class EnchantWrapper extends Enchantment {
 		return e.toArray(new EnumItemSlot[0]);
 	}
 	
+	public double getWeightValue() {
+		return this.enchant.getWeighting();
+	}
+	
 	@Override
 	public int e() {
 	    return this.enchant.MinLvl();
