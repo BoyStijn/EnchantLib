@@ -2,41 +2,40 @@ package blob.enchantlib;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import blob.enchantlib.enchanttable.WeightEntry;
+import net.minecraft.util.RandomSource;
 
 public class WeightedRandom {
-
-	public static double getTotalWeight(List<? extends WeightEntry> $$0) {
-		double total = 0;
-	    for (WeightEntry $$2 : $$0)
-	      total += $$2.getWeight().asDouble(); 
-	    if (total > 2147483647L)
+	
+	public static double getTotalWeight(List<? extends WeightEntry> pool) {
+	    long l = 0L;
+	    for (WeightEntry weightedEntry : pool)
+	      l += weightedEntry.getWeight().asDouble(); 
+	    if (l > 2147483647L)
 	      throw new IllegalArgumentException("Sum of weights must be <= 2147483647"); 
-	    return total;
+	    return l;
 	  }
 	  
-	  public static <T extends WeightEntry> Optional<T> getRandomItem(Random $$0, List<T> $$1, double $$2) {
-	    if ($$2 < 0)
+	  public static <T extends WeightEntry> Optional<T> getRandomItem(RandomSource random, List<T> pool, double totalWeight) {
+	    if (totalWeight < 0)
 	      throw new IllegalArgumentException("Negative total weight in getRandomItem"); 
-	    if ($$2 == 0)
+	    if (totalWeight == 0)
 	      return Optional.empty(); 
-	    double $$3 = $$0.nextDouble($$2);
-	    return getWeightedItem($$1, $$3);
+	    double i = (random.j() * totalWeight);
+	    return getWeightedItem(pool, i);
 	  }
 	  
-	  public static <T extends WeightEntry> Optional<T> getWeightedItem(List<T> $$0, double $$1) {
-	    for (WeightEntry weightedEntry : $$0) {
-	      $$1 -= weightedEntry.getWeight().asInt();
-	      if ($$1 < 0)
+	  public static <T extends WeightEntry> Optional<T> getWeightedItem(List<T> pool, double totalWeight) {
+	    for (WeightEntry weightedEntry : pool) {
+	      totalWeight -= weightedEntry.getWeight().asDouble(); 
+	      if (totalWeight < 0)
 	        return Optional.of((T)weightedEntry); 
 	    } 
 	    return Optional.empty();
 	  }
 	  
-	  public static <T extends WeightEntry> Optional<T> getRandomItem(Random $$0, List<T> $$1) {
-	    return getRandomItem($$0, $$1, getTotalWeight($$1));
-	  }
-	
+	  public static <T extends WeightEntry> Optional<T> getRandomItem(RandomSource random, List<T> pool) {
+	    return getRandomItem(random, pool, getTotalWeight(pool));
+	  }	
 }

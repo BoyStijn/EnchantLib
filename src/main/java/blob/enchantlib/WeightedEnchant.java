@@ -1,7 +1,6 @@
 package blob.enchantlib;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 import blob.enchantlib.enchanttable.WeightEntry;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -18,19 +17,11 @@ public class WeightedEnchant extends WeightEntry {
 	}
 	
 	private static double WeightHelper(Enchantment ench) {
-		try {
-			Method[] meth = ench.getClass().getDeclaredMethods();
-			for (int i = 0; i < meth.length; i++) {
-				if (meth[i].getReturnType() != double.class) continue;
-				if (meth[i].getParameterCount() > 0) continue;
-				if (meth[i].getName() != "getWeightValue") continue;
-				return (double)meth[i].invoke(ench);
-			}
-			return ench.d().a();
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			return 0;
+		if (ench instanceof EnchantWrapper) {
+			EnchantLib.Instance.getLogger().log(Level.INFO, "using custom rarity methode for enchantment: " + ench.toString());
+			return ((EnchantWrapper)ench).getWeightValue();
 		}
+		return ench.d().a();
 	}
 	
 }

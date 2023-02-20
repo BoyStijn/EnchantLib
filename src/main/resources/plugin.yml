@@ -2,4 +2,4 @@ name: EnchantLib
 version: '1.0.0'
 main: blob.enchantlib.EnchantLib
 load: STARTUP
-api-version: 1.18
+api-version: 1.19

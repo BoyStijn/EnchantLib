@@ -1,16 +1,24 @@
 package blob.enchantlib;
 
-import java.lang.reflect.Field;
+//JAVA
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
+//BUKKIT
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.google.gson.GsonBuilder;
+
+//EnchantLib
+import blob.enchantlib.NMS.ConvertUtils;
+import blob.enchantlib.NMS.NMSMapping;
+import blob.enchantlib.NMS.NMSMapping.LootTable_Fields;
+import blob.enchantlib.NMS.NMSMapping.NMSField;
 import blob.enchantlib.loot.LootOverride;
 import blob.enchantlib.villagers.TradesOverride;
+
+//NMS
 import net.minecraft.resources.MinecraftKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -32,32 +40,29 @@ public class EnchantLib extends JavaPlugin {
 	}
 	
 	public void rebuildLootTables() {
-		try {
-			MinecraftServer serv = ((CraftServer)Bukkit.getServer()).getServer();
-			LootTableRegistry ltr = serv.aF();
-			Field cField = LootTableRegistry.class.getDeclaredField("c");
-			cField.setAccessible(true);
-			
-			Map<MinecraftKey, LootTable> oldmap = (Map<MinecraftKey, LootTable>) cField.get(ltr);
-			HashMap<MinecraftKey, LootTable> lootmap = new HashMap<MinecraftKey, LootTable>();
-			HashMap<LootTable, MinecraftKey> keymap = new HashMap<LootTable, MinecraftKey>();
-			
-			for (Entry<MinecraftKey, LootTable> e : oldmap.entrySet()) {
+		MinecraftServer server = ConvertUtils.toNMS(this.getServer());
+		LootTableRegistry ltr = server.aG(); //[getLootTable] public LootTableRegistry aH() { | MinecraftServer - 2189
+		NMSField lootField = NMSMapping.getField(LootTable_Fields.LootTables);
+		
+		@SuppressWarnings("unchecked")
+		Map<MinecraftKey, LootTable> oldmap = (Map<MinecraftKey, LootTable>) lootField.getField(ltr);
+		HashMap<MinecraftKey, LootTable> lootmap = new HashMap<MinecraftKey, LootTable>();
+		HashMap<LootTable, MinecraftKey> keymap = new HashMap<LootTable, MinecraftKey>();
+		
+		LootOverride.override((key, loot) -> {
+			LootTable l = loot.b();
+			lootmap.put(key, l);
+			keymap.put(l, key);
+		});
+		
+		for (Entry<MinecraftKey, LootTable> e : oldmap.entrySet()) {
+			if (!lootmap.containsKey(e.getKey())) {
 				lootmap.put(e.getKey(), e.getValue());
 				keymap.put(e.getValue(), e.getKey());
 			}
-			
-			LootOverride.override((key, loot) -> {
-				LootTable l = loot.b();
-				lootmap.put(key, l);
-				keymap.put(l, key);
-			});
-			
-			ltr.lootTableToKey = keymap;
-			cField.set(ltr, lootmap);
-			
-		} catch(Exception e) {
-			e.printStackTrace();
 		}
+		
+		ltr.lootTableToKey = keymap;
+		lootField.setField(ltr, lootmap);
 	}
 }

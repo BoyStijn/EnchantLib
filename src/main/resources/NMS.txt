@@ -1,0 +1,15 @@
+V:1.19.2-R1
+[Enchantment Registry] public static final IRegistry<Enchantment> W = a(i, registry -> Enchantments.x); | IRegistry - 195
+[LootTables] private Map<MinecraftKey, LootTable> c = (Map<MinecraftKey, LootTable>)ImmutableMap.of(); | LootTableRegistry - 24
+[getLootTable] public LootTableRegistry aH() { | MinecraftServer - 2189
+[getNBTData] public NBTTagCompound u() { | ItemStack - 769
+[HasTag] public boolean e(String key) { | NBTTagCompound - 266
+[getList] public NBTTagList c(String key, int type) { | NBTTagCompound - 406
+[getCompoundTag] public NBTTagCompound p(String key) { | NBTTagCompound - 394
+[setTag] public NBTBase a(String key, NBTBase element) { | NBTTagCompound - 163
+[setNBT] public void c(@Nullable NBTTagCompound nbt) { | ItemStack - 841
+[getString] public String j(int index) { | NBTTagList - 257
+[fromJson] public static IChatMutableComponent a(String json) { | ChatSerializer - 514
+[mergeStyle] public static IChatMutableComponent a(IChatMutableComponent text, ChatModifier style) { | ChatComponentUtils - 24
+[withColor] public ChatModifier a(@Nullable EnumChatFormat color) { | ChatModifier - 134
+[italic] public ChatModifier b(@Nullable Boolean italic) { | ChatModifier - 146

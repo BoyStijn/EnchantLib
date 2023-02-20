@@ -9,11 +9,11 @@ import com.google.gson.JsonSerializationContext;
 import blob.enchantlib.EnchantLib;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
+
 import net.minecraft.util.ChatDeserializer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentManager;
 import net.minecraft.world.level.storage.loot.LootTableInfo;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionConditional;
@@ -24,45 +24,47 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
 public class LootEnchant extends LootItemFunctionConditional {
-	final NumberProvider a;
-	  
+	  final NumberProvider a;
 	  final boolean b;
 	  
-	  LootEnchant(LootItemCondition[] var0, NumberProvider var1, boolean var2) {
-	    super(var0);
-	    this.a = var1;
-	    this.b = var2;
+	  LootEnchant(LootItemCondition[] conditions, NumberProvider range, boolean treasureEnchantmentsAllowed) {
+	    super(conditions);
+	    this.a = range;
+	    this.b = treasureEnchantmentsAllowed;
 	  }
 	  
+	  @Override
 	  public LootItemFunctionType a() {
 	    return LootItemFunctions.c;
 	  }
 	  
+	  @Override
 	  public Set<LootContextParameter<?>> b() {
 	    return this.a.b();
 	  }
 	  
-	  public ItemStack a(ItemStack var0, LootTableInfo var1) {
-	    Random var2 = var1.a();
-	    return EnchantLib.API.enchantItem(var2, var0, this.a.a(var1), this.b); //override
+	  @Override
+		public ItemStack apply(ItemStack t, LootTableInfo u) {
+		  RandomSource rand = u.a();
+		  return EnchantLib.API.enchantItem(rand, t, this.a.a(u), this.b);
+		}
+	  
+	  @Override
+	  public ItemStack a(ItemStack stack, LootTableInfo context) {
+	    return this.apply(stack, context);
+	  }
+	  
+	  public static a a(NumberProvider range) {
+	    return new a(range);
 	  }
 	  
 	  public static class a extends LootItemFunctionConditional.a<a> {
 	    private final NumberProvider a;
-	    private final List<LootItemCondition> c = Lists.newArrayList();
 	    private boolean b;
+	    private final List<LootItemCondition> c = Lists.newArrayList();
 	    
-	    public a b(LootItemCondition.a var0) {
-	    	this.c.add(var0.build());
-	        return d();
-	      }
-	    
-	    public a(NumberProvider var0) {
-	      this.a = var0;
-	    }
-	    
-	    protected a d() {
-	      return this;
+	    public a(NumberProvider range) {
+	      this.a = range;
 	    }
 	    
 	    public a e() {
@@ -70,44 +72,48 @@ public class LootEnchant extends LootItemFunctionConditional {
 	      return this;
 	    }
 	    
+	    @Override
 	    public LootItemFunction b() {
 	      return new LootEnchant(g(), this.a, this.b);
 	    }
 
 		@Override
-		public a c() {
+		public a b(LootItemCondition.a arg0) {
+			this.c.add(arg0.build());
+	        return d();
+		}
+
+		@Override
+		public a d() {
+			return this;
+		}
+
+		@Override
+		protected a c() {
 			return d();
 		}
 	  }
 	  
-	  public static a a(NumberProvider var0) {
-	    return new a(var0);
-	  }
-	  
 	  public static class b extends LootItemFunctionConditional.c<LootEnchant> {
-	    public void a(JsonObject var0, LootEnchant var1, JsonSerializationContext var2) {
-	      super.a(var0, var1, var2);
-	      var0.add("levels", var2.serialize(var1.a));
-	      var0.addProperty("treasure", Boolean.valueOf(var1.b));
+	    @Override
+	    public void a(JsonObject json, LootEnchant object, JsonSerializationContext context) {
+	      super.a(json, object, context);
+	      json.add("levels", context.serialize(object.a));
+	      json.addProperty("treasure", Boolean.valueOf(object.b));
 	    }
 	    
 	    @Override
-	    public LootEnchant b(JsonObject var0, JsonDeserializationContext var1, LootItemCondition[] var2) {
-	      NumberProvider var3 = (NumberProvider)ChatDeserializer.a(var0, "levels", var1, NumberProvider.class);
-	      boolean var4 = ChatDeserializer.a(var0, "treasure", false);
-	      return new LootEnchant(var2, var3, var4);
-	    }
-
 	    public final LootEnchant a(JsonObject var0, JsonDeserializationContext var1) {
-	        LootItemCondition[] var2 = (LootItemCondition[])ChatDeserializer.a(var0, "conditions", new LootItemCondition[0], var1, LootItemCondition[].class);
+	        LootItemCondition[] var2 = ChatDeserializer.a(var0, "conditions", new LootItemCondition[0], var1, LootItemCondition[].class);
 	        return b(var0, var1, var2);
-	      }
+	    }
 	    
+	    @Override
+	    public LootEnchant b(JsonObject jsonObject, JsonDeserializationContext jsonDeserializationContext, LootItemCondition[] lootItemConditions) {
+	      NumberProvider numberProvider = (NumberProvider)ChatDeserializer.a(jsonObject, "levels", jsonDeserializationContext, NumberProvider.class);
+	      boolean bl = ChatDeserializer.a(jsonObject, "treasure", false);
+	      return new LootEnchant(lootItemConditions, numberProvider, bl);
+	    }
 	  }
-
-	@Override
-	public ItemStack apply(ItemStack t, LootTableInfo u) {
-		Random var2 = u.a();
-	    return EnchantmentManager.a(var2, t, this.a.a(u), this.b);
-	}
 }
+

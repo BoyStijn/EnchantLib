@@ -15,7 +15,8 @@ public enum EnchantTarget {
 	BREAKABLE(EnchantmentSlotType.j),
 	BOW(EnchantmentSlotType.k),
 	WEARABLE(EnchantmentSlotType.l),
-	VANISABLE(EnchantmentSlotType.j),;
+	CROSSBOW(EnchantmentSlotType.m),
+	VANISABLE(EnchantmentSlotType.n);
 
 	private final EnchantmentSlotType type;
 	
