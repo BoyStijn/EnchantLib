@@ -76,7 +76,7 @@ import blob.enchantlib.EnchantTarget;
 
 public class TestEnchant extends CustomEnchantment {
 
-	public TestEnchant(EnchantRarity rarity, EnchantTarget target, EnchantSlot[] slots) {
+	public TestEnchant(double rarity, EnchantTarget target, EnchantSlot[] slots) {
 		super(rarity, target, slots);
 	}
 	
